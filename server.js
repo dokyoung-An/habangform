@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const mongoURI = process.env.MONGO_URI;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,9 +11,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 // MongoDB 연결
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(mongoURI)
     .then(() => console.log('MongoDB에 성공적으로 연결되었습니다!'))
-    .catch(err => console.error('MongoDB 연결 실패:', err));
+    .catch(err => {
+        console.error('MongoDB 연결 실패:', err.message);
+        process.exit(1); // 연결 실패 시 종료
+    });
 
 // 스키마와 모델 정의
 const customerSchema = new mongoose.Schema({
