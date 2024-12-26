@@ -191,31 +191,6 @@ table tr:hover {
     .stat-value-container {
         justify-content: center;
     }
-/* 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-   
-
-    table tbody {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    tbody tr td:nth-child(3) {
-        font-size: 14px;
-        text-align: left;
-        min-width: 40%;
-    }
-
-    tbody tr td:nth-child(5){
-        min-width: 10%;
-        word-break:keep-all;
-    } */
-  
     
     .m-table tbody tr td:nth-child(3) {
         font-weight: 400;
