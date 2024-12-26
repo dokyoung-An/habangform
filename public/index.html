@@ -20,8 +20,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      
-        
+            position: relative; /* 팝업 위치 조정을 위해 추가 */
         }
 
         h1 {
@@ -34,7 +33,6 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-           
         }
 
         label {
@@ -89,22 +87,38 @@
             margin: 0;
         }
 
-        .form-footer {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .required {
+            color: red;
+            font-size: 1em;
         }
 
-        .required {
-        color: red;
-        font-size: 1em;
-    }
+        /* 팝업 메시지 스타일 */
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 30px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+
+        .popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- <h1>예약 상담 신청</h1> -->
         <form id="customerForm">
             <div class="form-group">
                 <label for="customerName">이름 <span class="required">*</span></label>
@@ -155,6 +169,8 @@
                 <button type="submit" class="submit-button">상담 신청</button>
             </div>
         </form>
+
+        <div id="popup" class="popup">감사합니다! 상담사가 곧 연락드릴 예정입니다.</div>
     </div>
 
     <script>
@@ -178,16 +194,26 @@
                 });
 
                 if (response.ok) {
-                    alert('감사합니다 고객님. 상담사가 확인하는 대로 연락 드리도록 하겠습니다');
+                    showPopup('감사합니다! 상담사가 곧 연락드릴 예정입니다.');
                     document.getElementById('customerForm').reset();
                 } else {
-                    alert('문제가 발생했습니다. 다시 시도해주세요.');
+                    showPopup('문제가 발생했습니다. 다시 시도해주세요.');
                 }
             } catch (err) {
                 console.error('서버 요청 중 오류 발생:', err);
-                alert('서버 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+                showPopup('서버 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
         });
+
+        function showPopup(message) {
+            const popup = document.getElementById('popup');
+            popup.textContent = message;
+            popup.classList.add('show');
+
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000); // 3초 후에 팝업 숨김
+        }
     </script>
 </body>
 </html>
