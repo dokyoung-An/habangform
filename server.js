@@ -1,23 +1,16 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
 
-const cors = require('cors');
+// CORS 설정
 app.use(cors());
 
-
 // MongoDB 연결
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB에 성공적으로 연결되었습니다!'))
     .catch(err => console.error('MongoDB 연결 실패:', err));
 
@@ -37,25 +30,23 @@ customerSchema.pre('save', async function (next) {
     if (!this.customerNumber) {
         try {
             const lastCustomer = await Customer.findOne().sort({ customerNumber: -1 });
-            this.customerNumber = lastCustomer ? lastCustomer.customerNumber + 1 : 8729; // 시작 번호 설정
-            next();
+            this.customerNumber = lastCustomer ? lastCustomer.customerNumber + 1 : 8729;
         } catch (err) {
             console.error('고객 번호 생성 중 오류:', err);
-            next(err);
+            return next(err);
         }
-    } else {
-        next();
     }
+    next();
 });
 
 const Customer = mongoose.model('Customer', customerSchema);
 
-// 정적 파일 제공 설정
+// 정적 파일 제공
 app.use(express.static('public'));
 
-// Body-parser 설정
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// JSON 파싱 설정
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // 데이터 저장
 app.post('/submit', async (req, res) => {
@@ -122,10 +113,7 @@ app.put('/update-status/:id', async (req, res) => {
         const customerId = req.params.id;
         const { status } = req.body;
 
-        console.log(`요청된 ID: ${customerId}, 새로운 상태: ${status}`);
-
         if (!status) {
-            console.error('상태가 제공되지 않음');
             return res.status(400).send({ error: '상태가 제공되지 않았습니다.' });
         }
 
@@ -136,11 +124,9 @@ app.put('/update-status/:id', async (req, res) => {
         );
 
         if (!updatedCustomer) {
-            console.error(`고객 ID ${customerId}를 찾을 수 없음`);
             return res.status(404).send({ error: '해당 고객을 찾을 수 없습니다.' });
         }
 
-        console.log(`고객 ID ${customerId}의 상태가 ${status}로 업데이트되었습니다.`);
         res.send(updatedCustomer);
     } catch (err) {
         console.error('상태 업데이트 중 오류:', err);
@@ -160,7 +146,6 @@ app.get('/update-customer-numbers', async (req, res) => {
             nextCustomerNumber++;
         }
 
-        console.log('고객 번호 업데이트 완료');
         res.send('모든 고객 번호가 성공적으로 업데이트되었습니다.');
     } catch (err) {
         console.error('고객 번호 업데이트 중 오류 발생:', err);
@@ -169,4 +154,11 @@ app.get('/update-customer-numbers', async (req, res) => {
 });
 
 // 서버 실행
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+    .on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`Port ${PORT} is already in use. Please choose another port.`);
+        } else {
+            console.error('Server error:', err);
+        }
+    });
