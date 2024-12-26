@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 게시판</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>관리자 게시판</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>고객명</th>
+                <th>서비스 날짜</th>
+                <th>아파트명</th>
+                <th>평형</th>
+                <th>연락처</th>
+                <th>상태</th>
+                <th>조치</th>
+            </tr>
+        </thead>
+        <tbody id="adminTable">
+        </tbody>
+    </table>
+
+    <script>
+        // 고객 데이터를 가져오는 함수
+        fetch('/customers')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('adminTable');
+                data.customers.forEach((customer) => {
+                    const row = `
+                        <tr>
+                            <td>${customer.customerNumber || '번호 없음'}</td>
+                            <td>${customer.customerName}</td>
+                            <td>${new Date(customer.serviceDate).toLocaleDateString()}</td>
+                            <td>${customer.apartmentName}</td>
+                            <td>${customer.apartmentSize}</td>
+                            <td>${customer.contactNumber}</td>
+                            <td id="status-${customer._id}">${customer.status}</td>
+                            <td>
+                                <button onclick="updateStatus('${customer._id}', '상담완료')">상담완료</button>
+                                <button onclick="updateStatus('${customer._id}', '예약완료')">예약완료</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
+
+        // 상태 업데이트 함수
+        function updateStatus(customerId, newStatus) {
+            fetch(`/update-status/${customerId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById(`status-${customerId}`).innerText = newStatus;
+
+                        // 성공 시 팝업창 표시
+                        alert('정보가 업데이트 되었습니다.');
+
+                        // 새로고침하여 데이터 갱신 가능
+                        // location.reload();
+                    } else {
+                        alert('상태 업데이트 실패!');
+                    }
+                })
+                .catch(err => {
+                    console.error('상태 업데이트 중 오류:', err);
+                    alert('서버와 연결 중 오류가 발생했습니다.');
+                });
+        }
+    </script>
+</body>
+</html>

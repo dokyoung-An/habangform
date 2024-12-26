@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 상담 신청</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            flex: 1 1 calc(50% - 15px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            flex: 1 1 100%;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .required {
+        color: red;
+        font-size: 1em;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>예약 상담 신청</h1>
+        <form id="customerForm">
+            <div class="form-group">
+                <label for="customerName">이름 <span class="required">*</span></label>
+                <input type="text" id="customerName" name="customerName" placeholder="이름을 입력하세요" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="contactNumber">연락처 <span class="required">*</span></label>
+                <div style="display: flex; gap: 5px;">
+                    <select id="contactPrefix" required>
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                    </select>
+                    <input type="text" id="contactMid" maxlength="4" placeholder="****" required>
+                    <input type="text" id="contactEnd" maxlength="4" placeholder="****" required>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <label for="apartmentName">아파트 <span class="required">*</span></label>
+                <input type="text" id="apartmentName" name="apartmentName" placeholder="입주 예정 아파트 명칭" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="apartmentSize">평형/타입 <span class="required">*</span></label>
+                <input type="text" id="apartmentSize" name="apartmentSize" placeholder="아파트 평형/타입" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="serviceDate">점검 희망일 <span class="required">*</span></label>
+                <input type="date" id="serviceDate" name="serviceDate" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="apartmentDetails">동/호수 <span class="required">*</span></label>
+                <input type="text" id="apartmentDetails" name="apartmentDetails" placeholder="아파트 동/호수" required>
+            </div>
+        
+            <div class="form-group full-width">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree" required>
+                    <label for="agree">개인정보 제공 동의 <span class="required">*</span></label>
+                </div>
+            </div>
+        
+            <div class="form-group full-width">
+                <button type="submit" class="submit-button">상담 신청</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('customerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = {
+                customerName: document.getElementById('customerName').value,
+                contactNumber: `${document.getElementById('contactPrefix').value}-${document.getElementById('contactMid').value}-${document.getElementById('contactEnd').value}`,
+                apartmentName: document.getElementById('apartmentName').value,
+                apartmentSize: document.getElementById('apartmentSize').value,
+                serviceDate: document.getElementById('serviceDate').value,
+                apartmentDetails: document.getElementById('apartmentDetails').value,
+            };
+
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    alert('감사합니다 고객님. 상담사가 확인하는 대로 연락 드리도록 하겠습니다');
+                    document.getElementById('customerForm').reset();
+                } else {
+                    alert('문제가 발생했습니다. 다시 시도해주세요.');
+                }
+            } catch (err) {
+                console.error('서버 요청 중 오류 발생:', err);
+                alert('서버 요청 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        });
+    </script>
+</body>
+</html>

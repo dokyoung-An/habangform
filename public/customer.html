@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객 게시판</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>상담 현황 목록</h1>
+    
+    <!-- 통계 영역 -->
+   
+    <div class="stats">
+        <div class="stat-item">
+            <img src="icons/002.png" alt="상담 신청" class="stat-icon">
+            <div class="stat-text">
+                <p class="stat-label">상담신청</p>
+                <div class="stat-value-container">
+                    <h2 class="stat-value" id="totalApplications">12,350</h2><span class="stat-unit">건</span>
+                </div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <img src="icons/001.png" alt="상담 완료" class="stat-icon">
+            <div class="stat-text">
+                <p class="stat-label">상담완료</p>
+                <div class="stat-value-container">
+                    <h2 class="stat-value" id="completedConsultations">11,450</h2><span class="stat-unit">건</span>
+                </div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <img src="icons/003.png" alt="예약 완료" class="stat-icon">
+            <div class="stat-text">
+                <p class="stat-label">예약완료</p>
+                <div class="stat-value-container">
+                    <h2 class="stat-value" id="completedReservations">10,250</h2><span class="stat-unit">건</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 게시판 영역 -->
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>서비스</th>
+                <th>아파트명</th>
+                <th>이름</th>
+                <th>날짜</th>
+                <th>상태</th>
+            </tr>
+        </thead>
+        <tbody id="customerTable">
+            <!-- 데이터를 동적으로 추가 -->
+        </tbody>
+    </table>
+
+    <!-- 페이지 네이션 -->
+    <div id="pagination" class="pagination"></div>
+    
+
+   
+    <script>
+        let currentPage = 1;
+
+        // 숫자 형식을 ,로 구분하는 함수
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // 고객 데이터를 가져오는 함수
+        function fetchCustomers(page = 1) {
+            fetch(`/customers?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('customerTable');
+                    tableBody.innerHTML = '';
+
+                    data.customers.forEach((customer) => {
+                        const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
+                        const row = `
+                            <tr>
+                                <td>${customer.customerNumber || '번호 없음'}</td>
+                                <td>사전점검</td>
+                                <td>${customer.apartmentName}</td>
+                                <td>${maskedName}</td>
+                                <td>${new Date(customer.createdAt).toLocaleDateString()}</td> <!-- 글 작성일 표시 -->
+                                <td>
+                                    <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
+                                        ${customer.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+
+                    renderPagination(data.totalPages, data.currentPage);
+                })
+                .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
+        }
+
+        // 통계 데이터를 가져오는 함수
+        function fetchStats() {
+            fetch('/stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalApplications').innerText = formatNumber(data.totalApplications || 8729);
+                    document.getElementById('completedConsultations').innerText = formatNumber(data.completedConsultations || 8714);
+                    document.getElementById('completedReservations').innerText = formatNumber(data.completedReservations || 8234);
+                })
+                .catch(err => console.error('통계 데이터를 불러오는 중 오류 발생:', err));
+        }
+
+        // 페이지 네이션 생성 함수
+        function renderPagination(totalPages, currentPage) {
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.innerText = i;
+                pageButton.className = i === currentPage ? 'active' : '';
+                pageButton.onclick = () => fetchCustomers(i);
+                paginationDiv.appendChild(pageButton);
+            }
+        }
+
+        // 초기 데이터 로드
+        fetchCustomers();
+        fetchStats();
+    </script>
+</body>
+</html>
