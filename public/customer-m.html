@@ -120,10 +120,7 @@
     <table class="m-table" style="transform: scale(1); transform-origin: top left; box-shadow: 0 4px 8px rgba(0, 0, 0, 0); font-size: 14px; font-weight:400;">
         <thead>
             <tr>
-                <th>번호</th>
-                <th>서비스</th>
                 <th>아파트명</th>
-                <th>이름</th>
                 <th>날짜</th>
                 <th>상태</th>
             </tr>
@@ -157,10 +154,9 @@ function fetchCustomers(page = 1) {
                 const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
                 const row = `
                     <tr>
-                        <td>${customer.customerNumber || '번호 없음'}</td>
-                        <td>사전점검</td>
+    
                         <td>${customer.apartmentName}</td>
-                        <td>${maskedName}</td>
+                      
                         <td>${new Date(customer.createdAt).toLocaleDateString()}</td>
                         <td>
                             <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
