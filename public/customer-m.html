@@ -6,19 +6,7 @@
     <title>고객 게시판</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-        }
-
-        h1 {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 20px;
-        }
-
+    
         table {
             width: 100%;
             border-collapse: collapse;
@@ -75,8 +63,8 @@
             display: flex;
             justify-content: space-between;
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 30px auto;
+            padding: 0px;
             background-color: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -106,7 +94,7 @@
     </style>
 </head>
 <body>
-
+<div style="transform: scale(0.8); transform-origin: top left; display: flex; flex-direction: column; align-items: center; ">
     <!-- 통계 영역 -->
     <div class="stats" style="background-color: #fff;">
         <div class="stat-item">
@@ -145,7 +133,7 @@
 
     <!-- 페이지 네이션 -->
     <div id="pagination" class="pagination"></div>
-
+</div>
     <script>
         let currentPage = 1;
 
