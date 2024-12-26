@@ -156,36 +156,36 @@
         }
 
         // 고객 데이터를 가져오는 함수
-        function fetchCustomers(page = 1) {
-            fetch(`/customers?page=${page}`)
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById('customerTable');
-                    tableBody.innerHTML = '';
+function fetchCustomers(page = 1) {
+    fetch(`/customer-list?page=${page}`) // 요청 경로를 '/customer-list'로 변경
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('customerTable');
+            tableBody.innerHTML = '';
 
-                    data.customers.forEach((customer) => {
-                        const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
-                        const row = `
-                            <tr>
-                                <td>${customer.customerNumber || '번호 없음'}</td>
-                                <td>사전점검</td>
-                                <td>${customer.apartmentName}</td>
-                                <td>${maskedName}</td>
-                                <td>${new Date(customer.createdAt).toLocaleDateString()}</td>
-                                <td>
-                                    <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
-                                        ${customer.status}
-                                    </span>
-                                </td>
-                            </tr>
-                        `;
-                        tableBody.innerHTML += row;
-                    });
+            data.customers.forEach((customer) => {
+                const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
+                const row = `
+                    <tr>
+                        <td>${customer.customerNumber || '번호 없음'}</td>
+                        <td>사전점검</td>
+                        <td>${customer.apartmentName}</td>
+                        <td>${maskedName}</td>
+                        <td>${new Date(customer.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
+                                ${customer.status}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
 
-                    renderPagination(data.totalPages, page);
-                })
-                .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
-        }
+            renderPagination(data.totalPages, page);
+        })
+        .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
+}
 
         // 페이지 네이션 생성 함수
         function renderPagination(totalPages, currentPage) {

@@ -112,6 +112,31 @@ app.get('/customers', async (req, res) => {
     }
 });
 
+// 고객 데이터 가져오기 (최대 5개)
+app.get('/customer-list', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5; // 한 페이지에 표시할 고객 수를 5로 제한
+        const skip = (page - 1) * limit;
+
+        const totalCustomers = await Customer.countDocuments();
+        const customers = await Customer.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            totalCustomers,
+            customers,
+            totalPages: Math.ceil(totalCustomers / limit),
+            currentPage: page,
+        });
+    } catch (err) {
+        console.error('데이터 가져오기 실패:', err);
+        res.status(500).send('데이터 가져오기 실패');
+    }
+});
+
 // 상태 변경 API
 app.put('/update-status/:id', async (req, res) => {
     try {
