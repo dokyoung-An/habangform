@@ -9,14 +9,19 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
+const cors = require('cors');
+app.use(cors());
+
 
 // MongoDB 연결
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-    .then(() => console.log('MongoDB에 성공적으로 연결되었습니다!'))
-    .catch(err => console.error('MongoDB 연결 실패:', err));
+.then(() => console.log('MongoDB 연결 성공'))
+.catch((err) => {
+    console.error('MongoDB 연결 실패:', err);
+});
 
 // 스키마와 모델 정의
 const customerSchema = new mongoose.Schema({
