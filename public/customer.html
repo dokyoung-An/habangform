@@ -109,7 +109,7 @@
                 .then(data => {
                     document.getElementById('totalApplications').innerText = formatNumber(data.totalApplications || 8729);
                     document.getElementById('completedConsultations').innerText = formatNumber(data.completedConsultations || 8714);
-                    document.getElementById('completedReservations').innerText = formatNumber(data.completedReservations || 8234);
+                    document.getElementById('completedReservations').innerText = formatNumber(data.completedReservations || 7834);
                 })
                 .catch(err => console.error('통계 데이터를 불러오는 중 오류 발생:', err));
         }

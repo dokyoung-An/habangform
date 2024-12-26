@@ -74,7 +74,7 @@ app.get('/stats', async (req, res) => {
 
         const initialApplications = 8728;
         const initialConsultations = 8714;
-        const initialReservations = 8234;
+        const initialReservations = 7834;
 
         res.json({
             totalApplications: totalApplications + initialApplications,
