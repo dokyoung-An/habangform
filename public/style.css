@@ -208,6 +208,16 @@ table tr:hover {
         font-weight: 400;
         font-size: 14px;
         text-align: left;
+        min-width: 45%;
+    }
+
+    .m-table tbody tr td:nth-child(5){
+        min-width: 10%;
+        word-break:keep-all;
+    }
+    .m-table tbody tr td:nth-child(6) {
+        min-width: 35%;
+
     }
 
     
