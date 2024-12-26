@@ -210,7 +210,7 @@ table tr:hover {
     tbody tr td:nth-child(3) {
         font-size: 14px;
         text-align: left;
-        min-width: 45%;
+        min-width: 40%;
     }
 
     tbody tr td:nth-child(5){
