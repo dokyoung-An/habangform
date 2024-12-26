@@ -6,6 +6,7 @@ const mongoURI = process.env.MONGO_URI;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+console.log('MongoDB URI:', mongoURI);
 
 // CORS 설정
 app.use(cors());
