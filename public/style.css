@@ -203,6 +203,20 @@ table tr:hover {
         gap: 10px;
     }
 
+    tbody tr td:nth-child(3) {
+        font-size: 14px;
+        text-align: left;
+        min-width: 45%;
+    }
+
+    tbody tr td:nth-child(5){
+        min-width: 10%;
+        word-break:keep-all;
+    }
+    tbody tr td:nth-child(6) {
+        min-width: 35%;
+
+    }
     
     .m-table tbody tr td:nth-child(3) {
         font-weight: 400;
@@ -226,6 +240,8 @@ table tr:hover {
     table tbody tr td:nth-child(4) {
         display: none;
     }
+
+
 
     table tbody tr{
         display: flex;
