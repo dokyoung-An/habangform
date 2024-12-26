@@ -204,6 +204,13 @@ table tr:hover {
     }
 
     
+    .m-table tbody tr td:nth-child(3) {
+        font-weight: 400;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    
     table tbody tr td:nth-child(1),
     table tbody tr td:nth-child(2),
     table tbody tr td:nth-child(4) {
@@ -351,5 +358,6 @@ table tr:hover {
     .customer-info, .customer-status {
         display: table-cell;
     }
+   
 
 }
