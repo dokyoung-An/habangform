@@ -143,29 +143,36 @@
         }
 
         // 고객 데이터를 가져오는 함수
-function fetchCustomers(page = 1) {
-    fetch(`/customer-list?page=${page}`) // 요청 경로를 '/customer-list'로 변경
-        .then(response => response.json())
+        function fetchCustomers(page = 1) {
+    fetch(`/customer-list?page=${page}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             const tableBody = document.getElementById('customerTable');
             tableBody.innerHTML = '';
 
+            if (!data.customers || data.customers.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3">데이터가 없습니다.</td></tr>';
+                return;
+            }
+
             data.customers.forEach((customer) => {
-                const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
-                
-                // 날짜에서 월과 일 추출
-                const createdAt = new Date(customer.createdAt);
-                const formattedDate = `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`;
-                        
+                const createdAt = customer.createdAt ? new Date(customer.createdAt) : null;
+                const formattedDate = createdAt
+                    ? `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`
+                    : "날짜 없음";
+
                 const row = `
                     <tr>
-    
-                        <td>${customer.apartmentName}</td>
-                      
-                          <td>${formattedDate}</td> <!-- 수정된 부분 -->
+                        <td>${customer.apartmentName || "아파트명 없음"}</td>
+                        <td>${formattedDate}</td>
                         <td>
                             <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
-                                ${customer.status}
+                                ${customer.status || "상태 없음"}
                             </span>
                         </td>
                     </tr>
@@ -175,7 +182,10 @@ function fetchCustomers(page = 1) {
 
             renderPagination(data.totalPages, page);
         })
-        .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
+        .catch(err => {
+            console.error('데이터를 불러오는 중 오류 발생:', err);
+            document.getElementById('customerTable').innerHTML = '<tr><td colspan="3">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>';
+        });
 }
 
         // 페이지 네이션 생성 함수
