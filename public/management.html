@@ -120,6 +120,11 @@
 
         // 초기 데이터 로드
         fetchCustomers(currentPage);
+
+         // 5분마다 자동 업데이트
+         setInterval(() => {
+            fetchCustomers(currentPage);
+        }, 5 * 60 * 1000); // 5분(300,000ms)
     </script>
 </body>
 </html>
