@@ -91,7 +91,7 @@ table tbody {
 
 .mp td:nth-child(2) {
     width: 10%; /* 날짜 */
-    text-align: center;   
+      
 }
 
 .mp td:nth-child(3) {
@@ -114,6 +114,7 @@ table tbody {
 .m-table th:nth-child(1),
 .m-table td:nth-child(1) {
     width: 35%; /* 아파트명 */
+    text-align: center; 
 }
 
 .m-table th:nth-child(2),
