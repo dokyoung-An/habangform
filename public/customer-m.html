@@ -171,8 +171,8 @@
                         <td>${customer.apartmentName || "아파트명 없음"}</td>
                         <td>${formattedDate}</td>
                         <td>
-                            <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
-                                ${customer.status || "상태 없음"}
+                              <span class="status ${customer.status === '상담대기' ? 'pending' : customer.status === '상담완료' ? 'completed' : 'reserved'}">
+                ${customer.status}
                             </span>
                         </td>
                     </tr>

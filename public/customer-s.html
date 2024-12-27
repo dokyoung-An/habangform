@@ -52,8 +52,8 @@
                                 <td>${customer.apartmentName}</td>
                                  <td>${formattedDate}</td> <!-- 수정된 부분 -->
                                 <td>
-                                    <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
-                                        ${customer.status}
+                                      <span class="status ${customer.status === '상담대기' ? 'pending' : customer.status === '상담완료' ? 'completed' : 'reserved'}">
+                ${customer.status}
                                     </span>
                                 </td>
                             </tr>
