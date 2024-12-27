@@ -116,7 +116,7 @@ app.get('/customers', async (req, res) => {
 app.get('/customer-list', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 5; // 한 페이지에 표시할 고객 수를 5로 제한
+        const limit = 10; // 한 페이지에 표시할 고객 수를 5로 제한
         const skip = (page - 1) * limit;
 
         const totalCustomers = await Customer.countDocuments();
