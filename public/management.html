@@ -25,34 +25,76 @@
         </tbody>
     </table>
 
-    <script>
-        // 고객 데이터를 가져오는 함수
-        fetch('/customers')
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById('adminTable');
-                data.customers.forEach((customer) => {
-                    const row = `
-                        <tr>
-                            <td>${customer.customerNumber || '번호 없음'}</td>
-                            <td>${customer.customerName}</td>
-                            <td>${new Date(customer.serviceDate).toLocaleDateString()}</td>
-                            <td>${customer.apartmentName}</td>
-                            <td>${customer.apartmentSize}</td>
-                            <td>${customer.contactNumber}</td>
-                            <td id="status-${customer._id}">${customer.status}</td>
-                            <td>
-                                <button onclick="updateStatus('${customer._id}', '상담완료')">상담완료</button>
-                                <button onclick="updateStatus('${customer._id}', '예약완료')">예약완료</button>
-                            </td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                });
-            })
-            .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
+    <div id="pagination" class="pagination"></div>
 
-        // 상태 업데이트 함수
+    <script>
+        let currentPage = 1;
+        const rowsPerPage = 6;
+
+        function fetchCustomers(page = 1) {
+            fetch(`/customers?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('adminTable');
+                    tableBody.innerHTML = '';
+
+                    data.customers.forEach((customer) => {
+                        const row = `
+                            <tr>
+                                <td>${customer.customerNumber || '번호 없음'}</td>
+                                <td>${customer.customerName}</td>
+                                <td>${new Date(customer.serviceDate).toLocaleDateString()}</td>
+                                <td>${customer.apartmentName}</td>
+                                <td>${customer.apartmentSize}</td>
+                                <td>${customer.contactNumber}</td>
+                                <td id="status-${customer._id}">${customer.status}</td>
+                                <td>
+                                    <button onclick="updateStatus('${customer._id}', '상담완료')">상담완료</button>
+                                    <button onclick="updateStatus('${customer._id}', '예약완료')">예약완료</button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+
+                    renderPagination(data.totalPages, page);
+                })
+                .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
+        }
+
+        function renderPagination(totalPages, currentPage) {
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+
+            const maxVisibleButtons = 6;
+            const startPage = Math.floor((currentPage - 1) / maxVisibleButtons) * maxVisibleButtons + 1;
+            const endPage = Math.min(startPage + maxVisibleButtons - 1, totalPages);
+
+            if (startPage > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.innerText = '◀';
+                prevButton.className = 'pagination-arrow';
+                prevButton.onclick = () => fetchCustomers(startPage - 1);
+                paginationDiv.appendChild(prevButton);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.innerText = i;
+                pageButton.className = i === currentPage ? 'active' : '';
+                pageButton.onclick = () => fetchCustomers(i);
+                paginationDiv.appendChild(pageButton);
+            }
+
+            if (endPage < totalPages) {
+                const nextButton = document.createElement('button');
+                nextButton.innerText = '▶';
+                nextButton.className = 'pagination-arrow';
+                nextButton.onclick = () => fetchCustomers(endPage + 1);
+                paginationDiv.appendChild(nextButton);
+            }
+        }
+
         function updateStatus(customerId, newStatus) {
             fetch(`/update-status/${customerId}`, {
                 method: 'PUT',
@@ -64,12 +106,8 @@
                 .then(response => {
                     if (response.ok) {
                         document.getElementById(`status-${customerId}`).innerText = newStatus;
-
-                        // 성공 시 팝업창 표시
                         alert('정보가 업데이트 되었습니다.');
-
-                        // 새로고침하여 데이터 갱신 가능
-                        // location.reload();
+                        fetchCustomers(currentPage); // 현재 페이지 데이터 갱신
                     } else {
                         alert('상태 업데이트 실패!');
                     }
@@ -79,6 +117,9 @@
                     alert('서버와 연결 중 오류가 발생했습니다.');
                 });
         }
+
+        // 초기 데이터 로드
+        fetchCustomers(currentPage);
     </script>
 </body>
 </html>

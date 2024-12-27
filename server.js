@@ -139,14 +139,22 @@ app.get('/customer-list', async (req, res) => {
 
 // 상태 변경 API
 app.put('/update-status/:id', async (req, res) => {
+    const customerId = req.params.id;
+    const { status } = req.body;
+
+    console.log(`Updating customer ID: ${customerId}, Status: ${status}`);
+
+    // ID 유효성 검사
+    if (!mongoose.Types.ObjectId.isValid(customerId)) {
+        return res.status(400).send({ error: '유효하지 않은 ID입니다.' });
+    }
+
+    // 상태 값 확인
+    if (!status || (status !== '상담완료' && status !== '예약완료')) {
+        return res.status(400).send({ error: '올바른 상태 값이 필요합니다.' });
+    }
+
     try {
-        const customerId = req.params.id;
-        const { status } = req.body;
-
-        if (!status) {
-            return res.status(400).send({ error: '상태가 제공되지 않았습니다.' });
-        }
-
         const updatedCustomer = await Customer.findByIdAndUpdate(
             customerId,
             { status },
