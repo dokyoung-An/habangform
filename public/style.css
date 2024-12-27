@@ -72,6 +72,36 @@ table tbody {
     word-break: keep-all;
 }
 
+/* 메인 조그마한 게시판 디자인 */
+ .mp {
+    width: 100%; /* 테이블 너비를 100%로 고정 */
+    table-layout: fixed; /* 고정 레이아웃 */
+}
+.mp th, .mp td {
+    overflow: hidden; /* 넘치는 내용을 숨김 */
+    text-overflow: ellipsis; /* 말줄임표 처리 */
+    white-space: nowrap; /* 한 줄로 유지 */
+    word-wrap: break-word; /* 필요 시 단어 단위로 줄바꿈 */
+}
+
+.mp td:nth-child(1) {
+    width: 35%; /* 아파트명 */  
+}
+
+.mp td:nth-child(2) {
+    width: 10%; /* 날짜 */
+    text-align: center;   
+}
+
+.mp td:nth-child(3) {
+    width: 15%; /* 상태 */   
+}
+.mp td:nth-child(1), 
+.mp td:nth-child(2) ,
+.mp tr td span {
+    font-size: 10px;
+}
+
 /* 통계 영역 스타일 */
 .stats {
     display: flex;

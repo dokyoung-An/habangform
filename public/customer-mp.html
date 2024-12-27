@@ -8,11 +8,10 @@
 </head>
 <body>    
     <!-- 게시판 영역 -->
-    <table class="m-table" style="width:100%; transform:scale(0.8); box-shadow: 0 4px 8px rgba(0, 0, 0, 0); font-size: 14px; font-weight:400;">
+    <table class="mp" style="width:100%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0); font-size: 14px; font-weight:400;">
         <thead>
             <tr style="display: none;">
                 <th>아파트명</th>
-                <th>이름</th>
                 <th>날짜</th>
                 <th>상태</th>
             </tr>
@@ -21,7 +20,6 @@
             <!-- 데이터를 동적으로 추가 -->
         </tbody>
     </table>
-    <!-- 페이지 네이션 제거 -->
 
     <script>
         // 숫자 형식을 ,로 구분하는 함수
@@ -41,16 +39,13 @@
                     const customersToDisplay = data.customers.slice(0, 5);
 
                     customersToDisplay.forEach((customer) => {
-                        const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
-                        
-                         // 날짜에서 월과 일 추출
-                const createdAt = new Date(customer.createdAt);
-                const formattedDate = `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`;
+                        const createdAt = new Date(customer.createdAt);
+                        const formattedDate = `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`;
                         
                         const row = `
                             <tr>
                                 <td>${customer.apartmentName}</td>
-                                 <td>${formattedDate}</td> <!-- 수정된 부분 -->
+                                <td>${formattedDate}</td>
                                 <td>
                                     <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
                                         ${customer.status}
@@ -64,21 +59,8 @@
                 .catch(err => console.error('데이터를 불러오는 중 오류 발생:', err));
         }
 
-        // 통계 데이터를 가져오는 함수
-        function fetchStats() {
-            fetch('/stats')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('totalApplications').innerText = formatNumber(data.totalApplications || 8729);
-                    document.getElementById('completedConsultations').innerText = formatNumber(data.completedConsultations || 8714);
-                    document.getElementById('completedReservations').innerText = formatNumber(data.completedReservations || 7834);
-                })
-                .catch(err => console.error('통계 데이터를 불러오는 중 오류 발생:', err));
-        }
-
         // 초기 데이터 로드
         fetchCustomers();
-        fetchStats();
     </script>
 </body>
 </html>
