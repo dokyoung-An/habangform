@@ -6,9 +6,9 @@
     <title>고객 게시판</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="width:300px;">    
+<body>    
     <!-- 게시판 영역 -->
-    <table class="m-table" style="width:100%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0); font-size: 14px; font-weight:400;">
+    <table class="m-table" style="width:100%; transform:scale(0.8); box-shadow: 0 4px 8px rgba(0, 0, 0, 0); font-size: 14px; font-weight:400;">
         <thead>
             <tr style="display: none;">
                 <th>아파트명</th>
@@ -42,10 +42,15 @@
 
                     customersToDisplay.forEach((customer) => {
                         const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
+                        
+                         // 날짜에서 월과 일 추출
+                const createdAt = new Date(customer.createdAt);
+                const formattedDate = `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`;
+                        
                         const row = `
                             <tr>
                                 <td>${customer.apartmentName}</td>
-                                <td>${new Date(customer.createdAt).toLocaleDateString()}</td> <!-- 글 작성일 표시 -->
+                                 <td>${formattedDate}</td> <!-- 수정된 부분 -->
                                 <td>
                                     <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
                                         ${customer.status}

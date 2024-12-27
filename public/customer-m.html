@@ -152,12 +152,17 @@ function fetchCustomers(page = 1) {
 
             data.customers.forEach((customer) => {
                 const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
+                
+                // 날짜에서 월과 일 추출
+                const createdAt = new Date(customer.createdAt);
+                const formattedDate = `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`;
+                        
                 const row = `
                     <tr>
     
                         <td>${customer.apartmentName}</td>
                       
-                        <td>${new Date(customer.createdAt).toLocaleDateString()}</td>
+                          <td>${formattedDate}</td> <!-- 수정된 부분 -->
                         <td>
                             <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
                                 ${customer.status}

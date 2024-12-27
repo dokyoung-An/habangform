@@ -163,13 +163,18 @@
 
                     data.customers.forEach((customer) => {
                         const maskedName = customer.customerName[0] + '*'.repeat(customer.customerName.length - 2) + customer.customerName.slice(-1);
+                       
+                       // 날짜에서 월과 일 추출
+                const createdAt = new Date(customer.createdAt);
+                const formattedDate = `${createdAt.getMonth() + 1}. ${createdAt.getDate()}`;
+
                         const row = `
                             <tr>
                                 <td>${customer.customerNumber || '번호 없음'}</td>
                                 <td>사전점검</td>
                                 <td>${customer.apartmentName}</td>
                                 <td>${maskedName}</td>
-                                <td>${new Date(customer.createdAt).toLocaleDateString()}</td>
+                               <td>${formattedDate}</td>
                                 <td>
                                     <span class="status ${customer.status === '상담대기' ? 'pending' : 'completed'}">
                                         ${customer.status}
