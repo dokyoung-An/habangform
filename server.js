@@ -168,7 +168,7 @@ app.put('/update-status/:id', async (req, res) => {
 app.get('/update-customer-numbers', async (req, res) => {
     try {
         const customers = await Customer.find().sort({ createdAt: 1 });
-        let nextCustomerNumber = 12346;
+        let nextCustomerNumber = 8737;
 
         for (const customer of customers) {
             customer.customerNumber = nextCustomerNumber;
