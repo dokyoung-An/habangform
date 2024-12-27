@@ -64,7 +64,11 @@
                 })
                 .catch(err => console.error('통계 데이터를 가져오는 중 오류 발생:', err));
         }
-
+  // 숫자 형식을 ,로 구분하는 함수
+  function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        
         // 고객 데이터를 가져오는 함수
         function fetchCustomers(page = 1) {
             fetch(`/customers?page=${page}`)

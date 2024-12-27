@@ -5,96 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>고객 게시판</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-    
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto;
-            font-size: 16px;
-            text-align: left;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        table th, table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        table thead th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            gap: 5px;
-        }
-
-        .pagination button {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            background-color: white;
-            color: #333;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .pagination button.active {
-            background-color: #1a6dff;
-            color: white;
-            font-weight: bold;
-        }
-
-        .pagination button:hover {
-            background-color: #ddd;
-        }
-
-        .pagination-arrow {
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-item {
-            text-align: center;
-            flex: 1;
-        }
-
-        .stat-item img {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #555;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
+   
 </head>
 <body>
-<div style="transform: scale(1); transform-origin: top left; display: flex; flex-direction: column; align-items: center; ">
+<div style="width:100%; display: flex; flex-direction: column; align-items: center; ">
     <!-- 통계 영역 -->
     <div class="stats" style="background-color: #fff;">
         <div class="stat-item">
@@ -116,8 +30,8 @@
 
     <!-- 게시판 영역 -->
   <!-- 게시판 영역 -->
-  <div style="margin: 0 auto;">
-    <table class="m-table" style="transform: scale(1); transform-origin: top left; box-shadow: 0 4px 8px rgba(0, 0, 0, 0); font-size: 14px; font-weight:400;">
+  <div style="width:100%;">
+    <table class="m-table" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0); ">
         <thead>
             <tr>
                 <th>아파트명</th>
@@ -134,8 +48,24 @@
     <!-- 페이지 네이션 -->
     <div id="pagination" class="pagination"></div>
 </div>
+
     <script>
-        let currentPage = 1;
+         // 통계 데이터 가져오기
+         function fetchStats() {
+            fetch('/stats')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('totalApplications').innerText = data.totalApplications || '8737';
+                    document.getElementById('completedConsultations').innerText = data.completedConsultations || '8714';
+                    document.getElementById('completedReservations').innerText = data.completedReservations || '7834';
+                })
+                .catch(err => console.error('통계 데이터를 가져오는 중 오류 발생:', err));
+        }
 
         // 숫자 형식을 ,로 구분하는 함수
         function formatNumber(num) {
@@ -223,6 +153,7 @@
         }
 
         // 초기 데이터 로드
+        fetchStats(); 
         fetchCustomers();
         renderPagination(30, 1); // 예: 총 30 페이지
     </script>
