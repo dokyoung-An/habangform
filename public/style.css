@@ -81,6 +81,7 @@ table tbody {
     table-layout: fixed; /* 고정 레이아웃 */
 }
 .mp th, .mp td {
+    padding: 5px 12px;
     overflow: hidden; /* 넘치는 내용을 숨김 */
     text-overflow: ellipsis; /* 말줄임표 처리 */
     white-space: nowrap; /* 한 줄로 유지 */
@@ -89,6 +90,7 @@ table tbody {
 
 .mp td:nth-child(1) {
     width: 35%; /* 아파트명 */  
+    font-weight: 700;
 }
 
 .mp td:nth-child(2) {
