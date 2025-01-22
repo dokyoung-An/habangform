@@ -72,7 +72,7 @@ table tbody {
 
 /* 메인 조그마한 게시판 디자인 */
  .mp {
-    width: 100%; /* 테이블 너비를 100%로 고정 */
+    width: 97%; /* 테이블 너비를 100%로 고정 */
     table-layout: fixed; /* 고정 레이아웃 */
 }
 .mp th, .mp td {
